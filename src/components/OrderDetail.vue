@@ -19,7 +19,9 @@ const props = defineProps({
   id: Number,
 })
 
+//控制支付方式选择对话框的弹出
 let dialog = ref(false)
+//支付方式
 let payMethod = ref('alipay')
 
 let orderDetail = reactive<{ data: OrderDetailData }>({
