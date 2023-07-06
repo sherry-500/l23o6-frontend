@@ -75,7 +75,7 @@ const getTrain = () => {
       ElNotification({
         offset: 70,
         title: 'getTrain错误(orderDetail)',
-        message: h('error', { style: 'color: teal' }, error.response?.data.msg),
+        message: h('error', {style: 'color: teal'}, error.response?.data.msg),
       })
       console.log(error)
     })

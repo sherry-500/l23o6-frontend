@@ -21,6 +21,7 @@ let form = reactive({
   mileAge: ''
 });
 
+//增加积分字段
 const setForm = async () => {
   form.username = user.username;
   form.name = user.name;
