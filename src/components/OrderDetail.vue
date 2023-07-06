@@ -35,6 +35,7 @@ let orderDetail = reactive<{ data: OrderDetailData }>({
     end_station_id: 0,
     departure_time: '',
     arrival_time: '',
+    price: 0
   },
 })
 
@@ -48,7 +49,7 @@ const getOrderDetail = () => {
     method: 'GET',
   }).then(res => {
     orderDetail.data = res.data.data
-    console.log(orderDetail.data)
+    console.log(orderDetail.data.price)
   }).catch(err => {
     console.log(err)
     if (err.response?.data.code == 100003) {
@@ -92,12 +93,15 @@ const pay = (id: number) => {
       status: payMethod.value + '已支付',
     }
   }).then((res) => {
-    document.write(res.data.data)
-    // ElNotification({
-    //   offset: 70,
-    //   title: '支付成功',
-    //   message: h('success', { style: 'color: teal' }, res.data.msg),
-    // })
+    if(payMethod.value == 'alipay') {
+      document.write(res.data.data)
+    }else {
+      ElNotification({
+        offset: 70,
+        title: '支付成功',
+        message: h('success', { style: 'color: teal' }, res.data.msg),
+      })
+    }
     getOrderDetail()
   }).catch((error) => {
     if (error.response?.data.code == 100003) {
@@ -181,13 +185,23 @@ getOrderDetail()
       </div>
     </div>
 
-    <div>
-      <el-text size="large" tag="b" type="primary">
-        订单状态:&nbsp;&nbsp;
-      </el-text>
-      <el-text size="large" tag="b" v-if="orderDetail.data">
-        {{ orderDetail.data.status }}
-      </el-text>
+    <div style="display: flex; justify-content: space-between;">
+      <div>
+        <el-text size="large" tag="b" type="primary">
+          订单状态:&nbsp;&nbsp;
+        </el-text>
+        <el-text size="large" tag="b" v-if="orderDetail.data">
+          {{ orderDetail.data.status }}
+        </el-text>
+      </div>
+      <div>
+        <el-text size="large" tag="b" type="primary">
+          订单价格:&nbsp;&nbsp;
+        </el-text>
+        <el-text size="large" tag="b" v-if="orderDetail.data">
+          {{ orderDetail.data.price}}
+        </el-text>
+      </div>
     </div>
     <div style="margin-bottom: 2vh">
       <el-text size="large" tag="b" type="primary">
@@ -233,7 +247,7 @@ getOrderDetail()
         </el-button>
       </div>
     </div>
-    <div v-else-if="orderDetail.data && orderDetail.data.status === '已支付'" style="margin-top: 2vh">
+    <div v-else-if="orderDetail.data && (orderDetail.data.status === 'alipay已支付' || orderDetail.data.status === 'other已支付')" style="margin-top: 2vh">
       <div style="float:right;">
         <el-button @click="cancel(id ?? -1)">
           取消订单
