@@ -94,6 +94,7 @@ const pay = (id: number) => {
     }
   }).then((res) => {
     if(payMethod.value == 'alipay') {
+      //支付宝二维码显示及页面跳转
       document.write(res.data.data)
     }else {
       ElNotification({
